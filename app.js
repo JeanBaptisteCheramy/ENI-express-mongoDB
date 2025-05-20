@@ -1,7 +1,7 @@
 const dotenv = require('dotenv')
 const mongoose = require('mongoose');
 const express = require('express')
-const articleRouter = require('./router/article-router')
+const routerIndex = require('./routes')
 
 dotenv.config();
 const app = express()
@@ -16,7 +16,7 @@ const database = process.env.DATABASE
 
 const start = () => {
     console.log('Connected to database')
-    app.use('/articles', articleRouter)
+    app.use('/api', routerIndex)
 }
 
 mongoose.connect(database)
