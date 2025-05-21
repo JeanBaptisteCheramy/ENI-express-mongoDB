@@ -10,10 +10,13 @@ router.get('/', articleController.getAllArticles)
 router.get('/:id', articleController.getArticleById)
 
 // CREATE ARTICLE
-router.post('/add', articleController.createArticle)
+router.post('/create', articleController.createArticle)
 
 // UPDATE ARTICLE
 router.put('/update/:id', articleController.updateArticle)
+
+// DELETE ARTICLE
+router.delete('/delete/:id', articleController.deleteArticle)
 
 
 module.exports = router
