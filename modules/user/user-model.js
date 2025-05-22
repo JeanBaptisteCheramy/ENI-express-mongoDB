@@ -53,18 +53,19 @@ userSchema.pre('save', async function (next){
 
 userSchema.post('save', function (error, doc, next) {
     if (error.name === 'MongoServerError' && error.code === 11000) {
-        const message = `Le champ '${Object.keys(error.keyValue)[0]}' doit être unique.`;
+        const message = `Field '${Object.keys(error.keyValue)[0]}' must be unique`;
         next(new Error(message));
     } else {
         next(error);
     }
 })
 
-userSchema.methods.comparePassword = function (pwd, callback) {
-    bcrypt.compare(pwd, this.password, (err, isMatch) => {
-        if (err) return callback(err)
-        callback(null, isMatch)
-    })
+userSchema.methods.comparePassword = async function (givenPassword) {
+    try {
+        return await bcrypt.compare(givenPassword, this.password)
+    } catch (error) {
+        throw new Error('Error comparing password')
+    }
 }
 
 
