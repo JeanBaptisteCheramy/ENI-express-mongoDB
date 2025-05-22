@@ -25,6 +25,7 @@ const login = async (req, res) => {
     try {
         const { email, password } = req.body
         const user = await userModel.findOne({ email })
+        
         if (!user) {
             res.status(400).json({ message: "Error while logging in" })
         }

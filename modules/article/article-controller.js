@@ -1,4 +1,4 @@
-const articleModel = require("./article-model");
+const articleModel = require("./article-model")
 
 /**
  * Récupère tous les articles de la base de données
@@ -10,12 +10,12 @@ const articleModel = require("./article-model");
 
 const getAllArticles = async (req, res) => {
     try {
-        const articles = await articleModel.find();
-        return res.status(200).json(articles);
+        const articles = await articleModel.find()
+        return res.status(200).json(articles)
     } catch (err) {
-        return res.status(400).json(err.message);
+        return res.status(400).json(err.message)
     }
-};
+}
 
 /**
  * Récupère un article de la base de données par son ID
@@ -27,18 +27,32 @@ const getAllArticles = async (req, res) => {
  */
 
 const getArticleById = async (req, res) => {
-    try {
-        const article = await articleModel
-            .where({ uuid: req.params.id })
-            .findOne();
-        if (!article) {
-            return res.status(404).json({ message: "Article not found" });
-        }
-        return res.status(200).json(article);
-    } catch (err) {
-        return res.status(400).json(err.message);
+    if (!req.params.uuid) {
+        return res.status(400).json({ message: "Missing article uuid" })
     }
-};
+    if (typeof req.params.uuid !== "string") {
+        return res.status(400).json({ message: "Invalid uuid type" })
+    }
+    const article = await articleModel.where({ uuid: req.params.uuid }).findOne()
+    if (!article) {
+        return res.status(404).json({ message: "Article not found" })
+    }
+    return res.status(200).json(article)
+}
+
+// const getArticleById = async (req, res) => {
+//     try {
+//         const article = await articleModel
+//             .where({ uuid: req.params.id })
+//             .findOne()
+//         if (!article) {
+//             return res.status(404).json({ message: "Article not found" });
+//         }
+//         return res.status(200).json(article);
+//     } catch (err) {
+//         return res.status(400).json(err.message);
+//     }
+// }
 
 /**
  * Crée un nouvel article dans la base de données
@@ -51,18 +65,16 @@ const getArticleById = async (req, res) => {
 
 const createArticle = async (req, res) => {
     try {
-        const article = await articleModel.create(req.body);
-        return res
-            .status(201)
-            .json({
-                status: 201,
-                message: "Article created successfully",
-                article: article,
-            });
+        const article = await articleModel.create(req.body)
+        return res.status(201).json({
+            status: 201,
+            message: "Article created successfully",
+            article: article,
+        })
     } catch (err) {
-        return res.status(400).json(err.message);
+        return res.status(400).json(err.message)
     }
-};
+}
 
 /**
  * Met à jour un article dans la base de données par son ID
@@ -77,38 +89,36 @@ const createArticle = async (req, res) => {
 const updateArticle = async (req, res) => {
     try {
         const article = await articleModel.findOneAndUpdate(
-            { uuid: req.params.id },
+            { uuid: req.params.uuid },
             req.body,
             { new: true }
         )
         if (!article) {
-            return res.status(404).json({ message: "Article not found" });
+            return res.status(404).json({ message: "Article not found" })
         }
-        return res
-            .status(200)
-            .json({
-                status: 200,
-                message: "Article updated successfully",
-                article: article,
-            });
+        return res.status(200).json({
+            status: 200,
+            message: "Article updated successfully",
+            article: article,
+        })
     } catch (err) {
-        return res.status(400).json(err.message);
+        return res.status(400).json(err.message)
     }
 }
 
 const deleteArticle = async (req, res) => {
     try {
         const article = await articleModel
-            .where({ uuid: req.params.id })
-            .findOneAndDelete();
+            .where({ uuid: req.params.uuid })
+            .findOneAndDelete()
         if (!article) {
-            return res.status(404).json({ message: "Article not found" });
+            return res.status(404).json({ message: "Article not found" })
         }
         return res
             .status(200)
-            .json({ status: 200, message: "Article deleted successfully" });
+            .json({ status: 200, message: "Article deleted successfully" })
     } catch (err) {
-        return res.status(400).json(err.message);
+        return res.status(400).json(err.message)
     }
 }
 
